@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1668244431 source:d:\a网课\通软\实验\第八次实验\服务端\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock2.h>
+	<windows.h>
+	<string.h>
+

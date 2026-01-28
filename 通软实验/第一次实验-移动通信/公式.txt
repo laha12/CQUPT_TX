@@ -1,0 +1,4 @@
+\[P = \frac{1}{N}\sum\limits_{n = 0}^{N - 1} {\sqrt {{{\left( {a\left[ n \right]} \right)}^2} + {{\left( {b\left[ n \right]} \right)}^2}} } \]
+
+
+\[z\left[ k \right] = \sum\limits_{i = 0}^{m - 1} {x\left[ i \right]y\left[ {i + k} \right]} {\rm{          }}k \in \left[ {0,n - m} \right)\]

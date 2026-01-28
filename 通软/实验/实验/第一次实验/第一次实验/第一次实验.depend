@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1665227533 source:d:\a网课\通软\实验\第一次实验\第一次实验\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+

@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1667211584 source:d:\a网课\通软\实验\第五次实验\k-means\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+

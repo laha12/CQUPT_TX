@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1697446467 source:d:\_qq_download\通信软件基础\第一次实验\第一次实验\main\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+

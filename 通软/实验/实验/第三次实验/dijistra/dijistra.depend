@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1666005536 source:d:\a网课\通软\实验\第三次实验\dijistra\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

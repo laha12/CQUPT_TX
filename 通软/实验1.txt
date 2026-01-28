@@ -1,0 +1,170 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include<math.h>
+#define N 100
+#define M 12
+int main() 
+{
+	FILE *fp=NULL;//文件指针
+	char filename[N];//放置data文件地址
+	char pssname[N];//放置pss文件的地址
+	double str[30000];//存储读取的数据
+	char data[30000][20];//提取data文本里的数据
+	char data2[4096][20];//提取pSS文本的数据
+	double all[N];//存储求和值的数组
+	int i;
+	int j;
+	int k;
+	int t;
+	int l;//PSS文件个数
+	double temp;//用于交换
+	double sum;//用于求和
+	double p1[30000],a[3];
+	int b[3];
+	double per1[4091];
+	double max;//定义一个最大值
+	int posion;//定义下标
+	double delta;
+	double ref[18];
+	int place[6]= {0}; 
+	
+	
+//计算48个文件信号强度
+	for(t=0; t<4; t++) {
+		for(i=t*M; i<(t+1)*M-1; i++)
+		{
+			sprintf(filename,"C:\\Users\\86185\\Desktop\\通软\\实验 李洁\\实验\\第一次实验\\第一次实验数据\\data%d.txt",i);
+			if ( (fp = fopen(filename, "rt")) == NULL) 
+			{ //以文本读取模式打开文件
+				puts("Fail to open file!");//判断文件是否打开失败
+				exit(0);
+			}
+			//循环读取文件的每一行数据
+			sum=0;
+			for(j=0; j<30000; j++) 
+			{
+				fscanf(fp,"%s\n",&data[j][20]);
+				str[j]=atof(data[j]);//读取每一行作为字符串并且将其转换为双精度浮点
+
+				if(j%2!=0) 
+				{
+					sum+=sqrt(pow(str[j],2)+pow(str[j-1],2));
+				}
+			}
+			all[i]=sum;
+			printf("data%d文件信号强度为%lf\n",i,all[i]);
+		}
+		//操作结束后关闭文件
+		fclose(fp);
+	}
+
+
+//将信号值存储到信号
+	double xinhao[N];
+	for(i=0; i<48; i++) 
+	{
+		xinhao[i]=all[i];
+	}
+//将信号值排序并输出
+
+	for(i=0; i<47; i++) 
+	{
+		for(j=0; j<47-i; j++) 
+		{
+			if(all[j]<all[j+1]) 
+			{
+				temp=all[j];
+				all[j]=all[j+1];
+				all[j+1]=temp;
+
+			}
+		}
+	}
+	printf("-------------------------------------------------------------\n");
+//得出最大值的位置
+	for(k=0; k<6; k++) 
+	{
+		for(i=0; i<48; i++) 
+		{
+			if(all[k]==xinhao[i]) 
+			{
+				printf("data%d：位次%d,信号值为:%lf\n",i,k,all[k]);
+				place[k]=i;
+			}
+
+		}
+	}
+
+	printf("-------------------------------------------------------------\n");
+//提取pss文件数据
+	for(l=0; l<3; l++) 
+	{
+		sprintf(pssname,"C:\\Users\\86185\\Desktop\\通软\\实验 李洁\\实验\\第一次实验\\第一次实验数据\\PSS%d.txt",l);
+		if((fp=fopen(pssname,"rt"))==NULL) 
+		{
+			printf("错误\n");
+			exit(0);
+		}
+		for(j=0; j<4096; j++) 
+		{
+			fscanf(fp,"%s\n",&data2[j]);
+			p1[j]=atof(data2[j]);
+
+		}
+		
+		for(i=0; i<4091; i++) 
+		{
+			for(k=0; k<6; k++) 
+			{
+				per1[i]+=all[k]*p1[i+k];//做滑动计算
+			}
+		}
+		
+		max=per1[0];//定义a[0]为最大值
+		posion=0;//定义下标最小值为0
+		for(i=1; i<4091; i++) 
+		{
+			if(max<per1[i]) 
+			{
+				max=per1[i];
+				posion=i;
+			}
+		}//找出单元最大值和下标最小值
+		
+		a[l]=max;
+		b[l]=posion;
+
+		printf("PSS%d相关性最大值为%lf,地址为%d\n",l,a[l],b[l]);
+	}
+	printf("-------------------------------------------------------------\n");
+
+	for(l=0; l<3; l++) 
+	{
+
+		for(k=0; k<6; k++) 
+		{
+
+			delta=(-1)*(all[k]-a[l]);
+			ref[l*6+k]=delta/a[l]*100.0;
+			printf("PSS%d,data%d,相关系数%lf%\n",l,place[k],ref[l*6+k]);
+		}
+	}
+	printf("-------------------------------------------------------------\n");
+
+	max=ref[0];
+	posion=0;
+	for(i=1; i<18; i++) 
+	{
+		if(ref[i]>max) 
+		{
+			max=ref[i];
+			posion=i;
+
+		}
+	}
+	i--;
+	printf("data%d与PSS%d最相关",place[i%6],(i-k)/6);
+
+
+	return 0;
+}

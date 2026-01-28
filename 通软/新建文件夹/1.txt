@@ -1,0 +1,214 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include<math.h>
+#define N 100
+int main() {
+    FILE *fp;
+    char filename[50];
+    double str[30000];
+    char data[30000][20];
+double he[100];
+
+    int i,j,k,l;
+
+//前12个文件信号强度
+    for(i=0;i<12;i++)
+    {
+        sprintf(filename,"e:\\data%d.txt",i);
+
+
+    if ( (fp = fopen(filename, "rt")) == NULL ) {
+        puts("Fail to open file!");//判断文件是否打开失败
+        exit(0);
+    }
+    //循环读取文件的每一行数据
+    double sum=0;
+   for(j=0;j<30000;j++)
+        {
+            fscanf(fp,"%s\n",&data[j][20]);
+             str[j]=atof(data[j]);
+
+            if(j%2!=0)
+            {
+                sum+=sqrt(str[j]*str[j]+str[j-1]*str[j-1]);
+            }
+    }
+    he[i]=sum;
+    printf("data%d文件信号强度为%lf\n",i,he[i]);
+    }
+    //操作结束后关闭文件
+    fclose(fp);
+
+
+//20到32个文件信号强度
+
+    for(i=20;i<32;i++)
+    {
+        sprintf(filename,"e:\\data%d.txt",i);
+
+
+    if ( (fp = fopen(filename, "rt")) == NULL ) {
+        puts("Fail to open file!");
+        exit(0);//判断文件是否打开失败
+    }
+    //循环读取文件的每一行数据
+    double sum=0;
+
+
+   for(j=0;j<30000;j++)
+        {
+            fscanf(fp,"%s\n",&data[j][20]);
+             str[j]=atof(data[j]);
+
+            if(j%2!=0)
+            {
+                sum+=sqrt(str[j]*str[j]+str[j-1]*str[j-1]);
+            }
+    }
+    he[i]=sum;
+    printf("data%d文件信号强度为%lf\n",i,he[i]);
+    }
+    //操作结束后关闭文件
+    fclose(fp);
+
+
+//40到52个文件信号强度
+     for(i=40;i<52;i++)
+    {
+        sprintf(filename,"e:\\data%d.txt",i);
+
+
+    if ( (fp = fopen(filename, "rt")) == NULL ) {
+        puts("Fail to open file!");
+        exit(0);//判断文件是否打开失败
+    }
+    //循环读取文件的每一行数据
+    double sum=0;
+
+
+   for(j=0;j<30000;j++)
+        {
+            fscanf(fp,"%s\n",&data[j][20]);
+             str[j]=atof(data[j]);
+
+            if(j%2!=0)
+            {
+                sum+=sqrt(str[j]*str[j]+str[j-1]*str[j-1]);
+            }
+    }
+    he[i]=sum;
+    printf("data%d文件信号强度为%lf\n",i,he[i]);
+    }
+    //操作结束后关闭文件
+    fclose(fp);
+
+
+//60到72个文件信号强度
+ for(i=60;i<72;i++)
+    {
+        sprintf(filename,"e:\\data%d.txt",i);
+
+
+    if ( (fp = fopen(filename, "rt")) == NULL ) {
+        puts("Fail to open file!");
+        exit(0);//判断文件是否打开失败
+    }
+    //循环读取文件的每一行数据
+    double sum=0;
+
+
+   for(j=0;j<30000;j++)
+        {
+            fscanf(fp,"%s\n",&data[j][20]);
+             str[j]=atof(data[j]);
+
+            if(j%2!=0)
+            {
+                sum+=sqrt(str[j]*str[j]+str[j-1]*str[j-1]);
+            }
+    }
+    he[i]=sum;
+    printf("data%d文件信号强度为%lf\n",i,he[i]);
+    }
+    //操作结束后关闭文件
+    fclose(fp);
+
+//将信号值存储到信号
+double xinhao[100];
+for(i=0;i<72;i++)
+{
+    xinhao[i]=he[i];
+}
+//将信号值排序并输出
+double temp;
+for(i=1;i<71;i++)
+{
+    for(j=0;j<72-i;j++)
+    {
+        if(he[j]<he[j+1])
+        {
+            temp=he[j];
+            he[j]=he[j+1];
+            he[j+1]=temp;
+
+        }
+    }
+}
+
+//得出最大值的位置
+for(k=0;k<6;k++)
+{
+    for(i=0;i<72;i++)
+    {
+        if(he[k]==xinhao[i])
+        printf("排序后最大第%d个信号值为:%lf,位于%d\n",k,he[k],i);
+    }
+}
+//提取pss文件数据
+ char data2[4096][20];
+
+double p1[30000],a[3];int b[3];
+
+double per1[4091];
+
+
+//提取pss文件数据
+ char pssname[20];
+for(l=0;l<3;l++)
+   {
+       sprintf(pssname,"e:\\PSS%d.txt",l);
+   if((fp=fopen(pssname,"rt"))==NULL)
+    {
+        printf("错误\n");
+        exit(0);
+    }
+    for(j=0;j<4096;j++)
+    {
+        fscanf(fp,"%s\n",&data2[j]);
+        p1[j]=atof(data2[j]);
+
+    }
+    for(i=0;i<4091;i++)
+    {
+        for(k=0;k<6;k++)
+        {
+            per1[i]+=he[k]*p1[i+k];
+        }
+    }
+    double max=per1[0];//定义a[0]为最大值
+ int xiabiao=0;//定义下标最小值为0
+ for(i=1;i<4091;i++){
+  if(max<per1[i]){
+   max=per1[i];
+
+   xiabiao=i;
+  }}//找出单元最大值和下标最小值
+  a[l]=max;b[l]=xiabiao;
+printf("PSS%d相关性最大值为%lf,地址为%d\n",l,a[l],b[l]);
+   }
+if(a[0]>a[2]&&a[0]>a[1])printf("选择PSS0,最大相关性为%lf,地址为%d\n",a[0],b[0]);
+if(a[1]>a[0]&&a[1]>a[2])printf("选择PSS1,最大相关性为%lf,地址为%d\n",a[1],b[1]);
+else printf("选择PSS2,最大相关性为%lf,地址为%d\n",a[2],b[2]);
+
+    return 0;
+}
